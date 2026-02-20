@@ -1,0 +1,229 @@
+# Introducción a kubernetes
+
+### 1️⃣ Componentes Principales
+
+- **Kube-apiserver** : Es el centro de todo. Toda comunicación pasa por aquí (kubctl, controllers, etc.).
+- **etcd** : Base de datos clave-valor donde se guarda: estado deseado, Estado actual, Configuración del cluster.
+- **Kube-scheduler** : Decide en que nodo se ejecuta cada Pod.
+- **Kube-controller-manager** : controladores que Aseguran que haya el número correcto de pods, Detectan fallos, Mantienen el estado deseado.
+
+--------------
+
+**Cada nodo tiene**:
+
+- **kubelet**: Agente que, Recibe instrucciones del Api server, Arranca contenedores, Reporta estado.
+- **Container Runtime**: Ejecuta contenedores(containerd, CRI-o... ya no docker directamente).
+- **Kube-proxy**: gestiona red interna y reglas de tráfico.
+
+### 2️⃣ ¿Cómo ejecuta contenedores?
+
+*unidad mínima =* ***Pod***
+
+Un **pod** puede tener 1 o más contenedores, Comparten red, Comaprten almacenamiento (los contenedores dentro)
+
+Tú defines un YAML con el estado deseado:
+
+    “Quiero 3 réplicas de esta API”
+
+Kubernetes:
+
+- Crea 3 pods
+- Si uno muere, crea otro
+- Si un nodo cae, lo mueve
+
+### 3️⃣ Objetos fundamentales
+
+#### Pod
+
+Unidad básica.
+
+#### Deployment
+
+Mantiene réplicas y permite rolling updates.
+
+#### Service
+
+Expone Pods dentro del cluster.
+
+Tipos: 
+- ClusterIP (nterno)
+- NodePort
+- Loadbaancer
+- ExternalName
+
+#### Ingress
+
+Expone HTTP/HTTPS con reglas y dominio.
+
+#### ConfigMap
+
+Variables de entorno no sensibles. 
+
+#### Secret
+
+Datos sensibles (tokens,passwords).
+
+#### Networcking
+
+Modelo: 
+- Cada Pod tiene su IP.
+- Todos los pods pueden hablar entre sí.
+- Services crean IP virtual estable.
+- Ingress gestiona tráfico externo.
+
+Internamente usa:
+- CNI (Calico, Flannel, Cilium...)
+
+### 4️⃣ Formas de implementación
+
+#### 🧪A) Local (Desarrollo)
+
+- kind
+- minikube
+- k3d
+- microk8s
+
+Corre en:
+- Docker
+- Wsl
+- Vm
+
+#### 🏢B) On-Premise:
+
+Instalación manual con:
+- Kubeadm
+- k3s
+- Rancher
+- OpenShift
+
+Necesitas:
+- Varias máquinas
+- Red configurada
+- Firewall abierto
+- Certificados
+
+#### ☁️C) Cloud gestionado
+- EKS (AWS)
+- GKE (Google)
+- AKS (Azure)
+
+No gestionas control plane, escalado automático,mñas sencillo
+
+### 5️⃣ Flujo real de despliegue
+
+Paso típico:
+
+Construyes imagen Docker
+
+La subes a un registry
+
+Creas YAML Deployment
+
+Ejecutas:
+
+      kubectl apply -f deployment.yaml
+
+Kubernetes:
+
+Guarda en etcd
+
+Scheduler asigna nodo
+
+kubelet arranca contenedor
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////// Por pasar////////////////////////////////////////////////////////////
+
+8️⃣ Configuración real (ejemplo simplificado)
+
+Ejemplo Deployment:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mi-api
+  template:
+    metadata:
+      labels:
+        app: mi-api
+    spec:
+      containers:
+      - name: api
+        image: miimagen:v1
+        ports:
+        - containerPort: 8080
+
+Service:
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: mi-api
+  ports:
+    - port: 80
+      targetPort: 8080
+9️⃣ ¿Cuándo usar Kubernetes?
+
+✔ Microservicios
+✔ Escalado dinámico
+✔ Alta disponibilidad
+✔ Entornos cloud
+✔ CI/CD avanzado
+
+🔟 ¿Cuándo NO usarlo?
+
+❌ App simple monolítica
+❌ 1 servidor pequeño
+❌ Equipo sin experiencia DevOps
+❌ Restricciones fuertes de permisos
+
+Muchas veces Docker Compose es suficiente.
+
+🧠 Concepto clave que debes interiorizar
+
+Kubernetes no ejecuta “tu app”.
+
+Ejecuta un estado deseado declarativo.
+
+Tú declaras:
+
+“Quiero 3 instancias”
+
+Kubernetes constantemente compara:
+
+Estado actual vs estado deseado
+y corrige automáticamente.
+
+Aquí paro porque ya hemos cubierto:
+
+Arquitectura
+
+Componentes
+
+Networking
+
+Deployment
+
+Implementaciones
+
+Si quieres seguimos con:
+
+1️⃣ Seguridad profunda (RBAC, ServiceAccounts)
+2️⃣ Alta disponibilidad real
+3️⃣ Cómo funciona etcd internamente
+4️⃣ Helm y gestión de configuraciones
+5️⃣ CI/CD con Kubernetes
+6️⃣ Cómo montar tu propio cluster paso a paso
+7️⃣ Comparación con Docker Swarm
+8️⃣ Kubernetes internals (más bajo nivel aún)
