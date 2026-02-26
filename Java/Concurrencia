@@ -1,0 +1,5 @@
+Con spring ou asi 
+
+WebFlux -> mellora nas peticions IO e moita concurrencia
+
+WebMVC-> é máis bloqueate, 1 hilo por peticion. Usa Tomcat. Máis simple pero para cousas de non moitisima escala cunde
