@@ -1,32 +1,50 @@
 # Patrones Front
 
+## 📚 Índice
+
+* [Uso de claves en Storage](#uso-de-claves-en-storage)
+* [Funciones async: void vs Promise](#funciones-async-void-vs-promisevoid)
+* [Forms](#forms)
+
+---
+
 ## Uso de claves en Storage
 
 ### Qué es una clave
+
 Identificador único para guardar datos en storage.
 
 Ejemplo:
+
+```ts
 sessionStorage.setItem("clave", "valor");
+```
 
 ### Buenas prácticas
 
-- Usar nombres claros:
+* Usar nombres claros:
   "onboarding-form-draft"
 
-- Versionar:
+* Versionar:
   "onboarding-form-draft_v1"
 
-- Usar constantes:
-  const FORM_DRAFT_KEY = "onboarding-form-draft_v1";
+* Usar constantes:
+
+```ts
+const FORM_DRAFT_KEY = "onboarding-form-draft_v1";
+```
 
 ### Problemas comunes
 
-- Colisiones de claves
-- Datos sobrescritos
-- Incompatibilidad al cambiar el modelo
+* Colisiones de claves
+* Datos sobrescritos
+* Incompatibilidad al cambiar el modelo
 
 ### Idea clave
+
 "La clave es el ID de tu dato en el navegador"
+
+---
 
 ## Funciones async: void vs Promise<void>
 
@@ -104,3 +122,74 @@ await Promise.resolve(handler());
 ### Idea clave
 
 "Si alguien necesita esperar a que termine, devuelve una Promise"
+
+---
+
+## Forms
+
+### Patrón básico
+
+👉 Siempre:
+
+1. estado (`useState`)
+2. inputs controlados (`value + onChange`)
+3. validación en `onSubmit`
+4. mostrar errores en UI
+5. desactivar validación del navegador
+
+---
+
+### Ejemplo base
+
+```tsx
+const [email, setEmail] = useState("");
+const [error, setError] = useState("");
+
+function handleSubmit(e) {
+  e.preventDefault();
+
+  if (!email) {
+    setError("El correo es obligatorio");
+    return;
+  }
+
+  setError("");
+}
+```
+
+---
+
+### Validación email
+
+```ts
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email)) {
+  setError("Correo inválido");
+}
+```
+
+---
+
+### Desactivar validación del navegador
+
+```tsx
+<form onSubmit={handleSubmit} noValidate>
+```
+
+👉 Evita mensajes tipo:
+"Please fill out this field"
+
+---
+
+### Mostrar error
+
+```tsx
+{error && <p className="text-red-500 text-sm">{error}</p>}
+```
+
+---
+
+### Idea clave
+
+"El formulario lo controlo yo, no el navegador"
