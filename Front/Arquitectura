@@ -1,0 +1,18 @@
+# Arquitectura Front
+
+### Por capas
+
+Cómo funciona en capas
+
+Normalmente piensas en cosas como:
+
+pages → pantallas
+components → componentes de UI reutilizables o de apoyo visual
+hooks → lógica reutilizable de React
+types → tipos TypeScript
+services → lógica de acceso/persistencia/orquestación
+api → cliente HTTP y funciones de backend
+contexts → estado global
+layouts → estructuras visuales grandes
+
+La clave es que esas carpetas no tienen por qué ser globales al 100%, pero en arquitectura por capas sí suelen ser capas compartidas por la aplicación.
