@@ -1158,3 +1158,51 @@ peer-checked:
 ---
 
 Fin del manual.
+
+por meter 
+
+---
+
+## Cursor pointer
+
+`cursor-pointer` sirve para que el cursor cambie a la “mano” al pasar por encima de un elemento.
+
+```tsx
+<button className="cursor-pointer rounded bg-[#d0ff71] px-4 py-2 font-semibold text-[#193133] hover:brightness-95">
+  Crear usuario
+</button>
+
+Esto hace: indica visualmente que el elemento es clicable.
+Úsalo cuando: botones, iconos con acción, cards clicables, filas de tabla clicables o dropdowns custom.
+No lo uses en elementos que no hacen nada, porque puede confundir.
+No sustituye a usar HTML semántico: si algo se puede pulsar, mejor que sea <button> o <a>.
+Ventajas
+Mejora la experiencia de usuario.
+Hace más evidente que un elemento se puede pulsar.
+Es útil en elementos que visualmente no parecen botones.
+Desventajas
+Puede confundir si se aplica a elementos sin acción.
+No mejora la accesibilidad por sí solo.
+Si el elemento está deshabilitado, hay que cambiar también el cursor.
+Ejemplo con botón deshabilitado
+<button
+  disabled={isLoading}
+  className="cursor-pointer rounded bg-indigo-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+>
+  Guardar
+</button>
+cursor-pointer: estado normal clicable.
+disabled:cursor-not-allowed: estado deshabilitado.
+Ejemplo en icono clicable
+<button
+  type="button"
+  className="cursor-pointer rounded p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
+  aria-label="Abrir opciones"
+>
+  ...
+</button>
+Ejemplo en card clicable
+<button className="w-full cursor-pointer rounded-xl border bg-white p-4 text-left transition hover:shadow-md active:scale-[0.99]">
+  <h3 className="font-semibold text-slate-900">Usuario</h3>
+  <p className="text-sm text-slate-500">Ver detalle del usuario</p>
+</button>
